@@ -1,0 +1,111 @@
+<main class="profile-container">
+  <div class="profile-content" *ngIf="user">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img [src]="user.profileImage || '/assets/svg/default-avatar.svg'" [alt]="user.name">
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name">{{ user.name }}</h1>
+        <p class="profile-type">{{ getUserTypeLabel() }}</p>
+        <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-member-since">Membro desde {{ formatDate(user.createdAt) }}</p>
+      </div>
+      <button class="btn-edit" (click)="toggleEditMode()">
+        {{ isEditMode ? 'Cancelar' : 'Editar Perfil' }}
+      </button>
+    </div>
+
+    <div class="edit-form" *ngIf="isEditMode">
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="form-grid">
+          <app-primary-input
+            formControlName="name"
+            inputName="name"
+            type="text"
+            label="Nome"
+            placeholder="Seu nome completo">
+            <img src="/assets/svg/email-icon.svg"/>
+          </app-primary-input>
+
+          <app-primary-input
+            formControlName="email"
+            inputName="email"
+            type="email"
+            label="Email"
+            placeholder="seu@email.com">
+            <img src="/assets/svg/email-icon.svg"/>
+          </app-primary-input>
+
+          <div class="input-wrapper" *ngIf="user.userType === 'ong'">
+            <label for="cnpj">CNPJ</label>
+            <div class="input-content">
+              <input
+                id="cnpj"
+                formControlName="cnpj"
+                type="text"
+                placeholder="00.000.000/0000-00"
+                readonly
+              />
+            </div>
+          </div>
+
+          <div class="input-wrapper full-width" *ngIf="user.userType === 'ong'">
+            <label for="description">Descrição da ONG</label>
+            <div class="input-content textarea">
+              <textarea
+                id="description"
+                formControlName="description"
+                placeholder="Fale um pouco sobre a sua ONG..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="!profileForm.valid">
+            Salvar Alterações
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancelEdit()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="ong-info" *ngIf="user.userType === 'ong' && !isEditMode">
+      <h2>Sobre a ONG</h2>
+      <div class="ong-details">
+        <div class="detail-item">
+          <span class="label">CNPJ:</span>
+          <span class="value">{{ user.cnpj || 'Não informado' }}</span>
+        </div>
+        <div class="detail-item full-width">
+          <span class="label">Descrição:</span>
+          <p class="description">{{ user.description || 'Nenhuma descrição disponível.' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <h2>Estatísticas</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ user.favoritesPets.length || 0 }}</div>
+          <div class="stat-label">Pets Favoritados</div>
+        </div>
+        <div class="stat-card" *ngIf="user.userType === 'adotante'">
+          <div class="stat-number">{{ user.adoptedPets?.length || 0 }}</div>
+          <div class="stat-label">Pets Adotados</div>
+        </div>
+        <div class="stat-card" *ngIf="user.userType === 'ong'">
+          <div class="stat-number">{{ user.registeredPets?.length || 0 }}</div>
+          <div class="stat-label">Pets Cadastrados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="!user">
+    <p>Carregando perfil...</p>
+  </div>
+</main>

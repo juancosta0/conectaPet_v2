@@ -1,0 +1,48 @@
+
+<!-- <app-usuario-toolbar-info /> -->
+<header class="app-header" >
+  <!-- *ngIf="isLoggedIn" -->
+  <div class="header-container">
+    <div class="logo-container" routerLink="/feed">
+      <div class="logo-icon-wrapper">
+        <mat-icon class="logo">pets</mat-icon>
+      </div>
+      <span class="nav-link logo-text">ConectaPet</span>
+    </div>
+
+    <nav class="navbar">
+      <!-- *ngIf="isLoggedIn" -->
+      <div class="nav-links">
+        <div class="nav-center">
+          <a routerLink="/feed" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+            <mat-icon>pets</mat-icon>
+            <span>Adotar</span>
+          </a>
+          <a
+            [routerLink]="['/feed']"
+            [queryParams]="{ favorites: 'true' }"
+            routerLinkActive="active"
+            class="nav-link"
+          >
+            <mat-icon>star</mat-icon>
+            <span>Favoritos</span>
+          </a>
+          <a routerLink="/cadastro-pet" routerLinkActive="active" class="nav-link">
+            <mat-icon>add_circle</mat-icon>
+            <span>Cadastrar Pet</span>
+          </a>
+          <a routerLink="/profile" routerLinkActive="active" class="nav-link">
+            <mat-icon>person</mat-icon>
+            <span>Perfil</span>
+          </a>
+        </div>
+
+        <a routerLink="/login" routerLinkActive="active" class="nav-link logout" matTooltip="Sair">
+          <mat-icon>logout</mat-icon>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<router-outlet></router-outlet>

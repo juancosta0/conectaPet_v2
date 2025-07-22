@@ -1,0 +1,53 @@
+<div class="login-container">
+  <div class="login-wrapper">
+    <!-- Coluna da esquerda: formulário -->
+    <div class="form-side">
+      <div class="form-card">
+        <div class="logo-box">
+          <div class="logo-icon">
+            <mat-icon class="logo">pets</mat-icon>
+          </div>
+          <h1>ConectaPet</h1>
+          <p>Entre na sua conta</p>
+        </div>
+          <form [formGroup]="loginForm">
+            <app-primary-input
+              formControlName="email"
+              inputName="email"
+              type="email"
+              label="Email"
+              placeholder="johndoe@gmail.com"
+            >
+              <img src="/assets/svg/email-icon.svg" />
+            </app-primary-input>
+
+            <app-primary-input
+              formControlName="password"
+              inputName="password"
+              type="password"
+              label="Senha"
+            >
+              <img src="/assets/svg/password-icon.svg" />
+            </app-primary-input>
+
+            <span class="forgot-password">Esqueceu a senha?</span>
+          </form>
+          <app-secundary-button
+            label="Entrar"
+            (click)="submit()"/>
+            <span class="register-link">
+              Não tem uma conta? <a routerLink="/register">Cadastre-se</a>
+            </span>
+      </div>
+    </div>
+
+    <!-- Coluna da direita: ilustração -->
+    <div class="illustration-side">
+      <div class="illustration-box">
+        <img src="/assets/svg/cat-dog-illustration.svg" alt="Ilustração pet" />
+        <h2>Adote um amigo. Mude uma vida!</h2>
+        <p>Conecte-se com pets que precisam de um lar e encontre seu novo melhor amigo.</p>
+      </div>
+    </div>
+  </div>
+</div>

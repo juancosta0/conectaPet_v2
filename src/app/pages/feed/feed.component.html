@@ -1,0 +1,59 @@
+<main class="feed-container">
+  <!-- Título e subtítulo -->
+  <div class="header-section">
+    <h1 class="title">
+      {{ showFavorites ? 'Seus Pets Favoritos' : 'Pets Disponíveis para Adoção' }}
+    </h1>
+    <p class="subtitle">
+      {{ showFavorites ? 'Todos os pets que você favoritou' : 'Encontre seu novo melhor amigo!' }}
+    </p>
+  </div>
+
+  <!-- Filtros (se não for favoritos) -->
+  <section *ngIf="!showFavorites" class="filter-bar">
+    <div class="filters-grid">
+      <select>
+        <option>Tipo de Animal</option>
+        <option>Cão</option>
+        <option>Gato</option>
+      </select>
+      <select>
+        <option>Porte</option>
+        <option>Pequeno</option>
+        <option>Médio</option>
+        <option>Grande</option>
+      </select>
+      <select>
+        <option>Idade</option>
+        <option>Filhote</option>
+        <option>Jovem</option>
+        <option>Adulto</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- Cards de Pets -->
+  <div class="pets-grid">
+    @for (pet of pets; track pet.id) {
+      <app-pet-card
+        [pet]="pet"
+        (favoriteToggled)="onFavoriteToggled($event)"
+      ></app-pet-card>
+    }
+  </div>
+
+  <!-- Nenhum pet encontrado -->
+  <div *ngIf="pets.length === 0" class="empty-state">
+    <div class="icon-wrapper">
+      <mat-icon>favorite_border</mat-icon>
+    </div>
+    <h3>{{ showFavorites ? 'Nenhum favorito ainda' : 'Nenhum pet encontrado' }}</h3>
+    <p>
+      {{
+        showFavorites
+          ? 'Explore os pets disponíveis e adicione seus favoritos!'
+          : 'Tente ajustar os filtros ou volte mais tarde.'
+      }}
+    </p>
+  </div>
+</main>

@@ -1,0 +1,181 @@
+<div class="pet-form">
+  <form [formGroup]="petForm">
+    <div class="form-section">
+      <h3 class="section-title">
+        <span class="section-icon">🐾</span>
+        Informações Básicas
+      </h3>
+
+      <div class="form-row">
+        <app-primary-input
+            formControlName="nome"
+            inputName="nome"
+            type="text"
+            label="Nome do Pet"
+            placeholder="Ex: Rex, Luna, Caramelo">
+            <img src="/assets/svg/email-icon.svg"/>
+        </app-primary-input>
+
+        <div class="input-wrapper">
+          <label for="tipoAnimal">Tipo de Animal </label>
+          <div class="input-content select">
+            <select id="tipoAnimal" formControlName="tipoAnimal">
+              <option value="">Selecione...</option>
+              <option value="Cachorro">🐕 Cachorro</option>
+              <option value="Gato">🐱 Gato</option>
+              <option value="Coelho">🐰 Coelho</option>
+              <option value="Pássaro">🐦 Pássaro</option>
+              <option value="Outro">🐾 Outro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <app-primary-input
+            formControlName="raca"
+            inputName="raca"
+            type="text"
+            label="Raça"
+            placeholder="Ex: SRD, Labrador, Siamês">
+            <img src="/assets/svg/email-icon.svg"/>
+        </app-primary-input>
+
+        <app-primary-input
+            formControlName="idade"
+            inputName="idade"
+            type="number"
+            label="Idade (anos)"
+            placeholder="Ex: 2">
+            <img src="/assets/svg/email-icon.svg"/>
+        </app-primary-input>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">
+        <span class="section-icon">📏</span>
+        Características Físicas
+      </h3>
+
+      <div class="form-row">
+        <div class="input-wrapper">
+          <label for="porte">Porte</label>
+          <div class="input-content select">
+            <select id="porte" formControlName="porte">
+              <option value="">Selecione...</option>
+              <option value="Pequeno">🐕‍🦺 Pequeno (até 10kg)</option>
+              <option value="Médio">🐕 Médio (10-25kg)</option>
+              <option value="Grande">🐕‍🦮 Grande (25kg+)</option>
+            </select>
+          </div>
+        </div>
+
+        <app-primary-input
+            formControlName="cor"
+            inputName="cor"
+            type="text"
+            label="Cor Principal"
+            placeholder="Ex: Caramelo, Preto, Branco">
+            <img src="/assets/svg/email-icon.svg"/>
+        </app-primary-input>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">
+        <span class="section-icon">💝</span>
+        Sobre o Pet
+      </h3>
+
+      <div class="input-wrapper">
+        <label for="descricao">Descrição</label>
+        <div class="input-content textarea">
+            <textarea
+              id="descricao"
+              formControlName="descricao"
+              placeholder="Conte sobre a personalidade, comportamento, cuidados especiais, se é castrado, vacinado, etc..."
+              maxlength="300"
+            ></textarea>
+            <div class="char-counter">
+              {{ getDescriptionLength() }}/300 caracteres
+            </div>
+        </div>
+        <div class="description-tips">
+          <small>💡 <span>Dicas:</span> Mencione se é sociável, brincalhão, calmo, se convive bem com crianças/outros pets</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section photo-section">
+      <h3 class="section-title">
+        <span class="section-icon">📸</span>
+        Fotos do Pet
+      </h3>
+
+      <div class="image-upload-wrapper">
+        <label for="imagens" class="upload-label" [class.has-images]="previewUrls.length > 0">
+          <div class="upload-content">
+            <img src="/assets/svg/upload-icon.svg" alt="Upload Icon" width="32">
+            <div class="upload-text">
+              <span class="upload-title">Adicionar Fotos</span>
+              <small>Clique para selecionar ou arraste as imagens aqui</small>
+              <small class="upload-info">Formatos: JPG, PNG • Máximo: 5 fotos</small>
+            </div>
+          </div>
+        </label>
+        <input
+          type="file"
+          id="imagens"
+          accept="image/*"
+          multiple
+          (change)="onFileSelected($event)"
+        >
+
+        <div *ngIf="previewUrls.length > 0" class="image-preview-gallery">
+          <div *ngFor="let url of previewUrls; let i = index" class="preview-item">
+            <img [src]="url" alt="Pré-visualização da imagem {{ i + 1 }}">
+            <button type="button" class="remove-btn" (click)="removeImage(i)" title="Remover foto">
+              <span>&times;</span>
+            </button>
+            <div class="image-overlay" *ngIf="i === 0">
+              <span class="main-photo-badge">Foto Principal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-card">
+        <span class="info-icon">ℹ️</span>
+        <div class="info-content">
+          <strong>Importante:</strong>
+          <p>Certifique-se de que todas as informações estão corretas. Fotos de boa qualidade aumentam as chances de adoção!</p>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="form-actions">
+    <app-primary-button
+      action="enviar"
+      label="Enviar"
+      type="submit"
+      (clicked)="submit()"
+    ></app-primary-button>
+
+    <app-primary-button
+      action="voltar"
+      label="Voltar"
+      (clicked)="navigateToFeed()"
+    ></app-primary-button>
+
+    <app-primary-button
+      action="limpar"
+      label="Limpar"
+      type="reset"
+      (clicked)="resetForm()"
+    ></app-primary-button>
+
+  </div>
+</div>

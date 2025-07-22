@@ -1,0 +1,39 @@
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: #0D47A1;
+
+  .icon {
+    font-size: 1.2rem;
+  }
+
+  &.enviar {
+    background-color:#D1E9FF ; // azul
+    &:hover { background-color: 	#B3DAFF; }
+  }
+
+  &.voltar {
+    background-color: #E8EAF6;
+    color:#283593;
+    &:hover { background-color: 	#C5CAE9; }
+  }
+
+  &.limpar {
+    background-color: #FFEBEE;
+    color: #C62828;
+    &:hover { background-color:#FFCDD2; }
+  }
+
+  &:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+  }
+}

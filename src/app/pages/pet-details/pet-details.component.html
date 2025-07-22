@@ -1,0 +1,66 @@
+<main class="pet-details-container" *ngIf="pet">
+  <div class="pet-details-content">
+    <div class="pet-images">
+      <div class="main-image">
+        <img [src]="pet.imageUrls[0]" [alt]="'Foto de ' + pet.name" *ngIf="pet.imageUrls.length > 0">
+        <div class="no-image" *ngIf="pet.imageUrls.length === 0">
+          <span>Sem foto disponível</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pet-info">
+      <div class="pet-header">
+        <h1 class="pet-name">{{ pet.name }}</h1>
+        <button
+          class="favorite-btn-large"
+          [class.favorited]="isFavorite"
+          (click)="toggleFavorite()"
+          type="button"
+        >
+          <span class="heart-icon">{{ isFavorite ? '❤️' : '🤍' }}</span>
+          <span>{{ isFavorite ? 'Favoritado' : 'Favoritar' }}</span>
+        </button>
+      </div>
+
+      <div class="pet-basic-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Espécie:</span>
+            <span class="value">{{ pet.species }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Raça:</span>
+            <span class="value">{{ pet.breed }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Idade:</span>
+            <span class="value">{{ pet.age }} anos</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Porte:</span>
+            <span class="value">{{ pet.size }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Cor:</span>
+            <span class="value">{{ pet.color }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-description">
+        <h3>Sobre {{ pet.name }}</h3>
+        <p>{{ pet.description }}</p>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-adopt">Quero Adotar</button>
+        <button class="btn-contact">Entrar em Contato</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="loading" *ngIf="!pet">
+  <p>Carregando informações do pet...</p>
+</div>

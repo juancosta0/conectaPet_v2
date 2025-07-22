@@ -1,0 +1,9 @@
+<button
+  [type]="type"
+  [disabled]="disabled"
+  (click)="onClick()"
+  [class]="'action-btn ' + action"
+>
+  <mat-icon class="icon">{{ icon }}</mat-icon>
+  <span>{{ label }}</span>
+</button>
