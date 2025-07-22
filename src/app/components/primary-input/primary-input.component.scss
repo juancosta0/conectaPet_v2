@@ -17,23 +17,43 @@
         width: 100%;
         border-radius: 8px;
         display: flex;
+        position: relative;
 
         .icon {
-            padding: 12px;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: $green-color;
-            border-radius: 0 8px 8px 0;
+            padding: 8px;
+            border-radius: 4px;
 
             img {
                 height: 20px;
+                width: 20px;
             }
         }
 
         input {
             border: none;
-            border-radius: 8px 0 0 8px;
+            border-radius: 8px;
             background-color: $gray-secondary-bg;
-            padding: 12px 0 12px 20px;
+            padding: 12px 20px;
             width: 100%;
+            font-size: 14px;
+            color: $text-color;
+
+            &:focus {
+                outline: 2px solid $primary-color;
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
         }
     }
 }

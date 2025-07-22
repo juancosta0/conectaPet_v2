@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this._isAuthenticated.asObservable();
+  public authStatus = this._isAuthenticated.asObservable();
 
   constructor(private router: Router) {
     // Verifica o token no sessionStorage quando o serviço é inicializado
@@ -16,13 +16,14 @@ export class AuthService {
   }
 
   login() {
-    // lógica de login
     this._isAuthenticated.next(true);
   }
 
   logout(): void {
     sessionStorage.removeItem('auth-token');
     sessionStorage.removeItem('username');
+    sessionStorage.removeItem('user-email');
+    sessionStorage.removeItem('user-type');
     this.router.navigate(['/login']);
     this._isAuthenticated.next(false);
   }

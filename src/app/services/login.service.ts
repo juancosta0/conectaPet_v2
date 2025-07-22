@@ -1,58 +1,83 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
 import { AuthService } from './auth.service';
 import { LoginResponse } from '../types/login-response';
-import { User } from '../types/user.type';
+import { environment } from '../environment/environment';
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  userType: string;
+  cnpj?: string;
+  description?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  apiUrl: string = "http://localhost:8080/auth";
+  private apiUrl = `${environment.apiBaseUrl}/auth`;
 
   constructor(
     private httpClient: HttpClient,
     private authService: AuthService
   ) { }
 
-  carregarUsuario(id: number): Observable<User> {
-    return this.httpClient.get<User>(`/usuarios/${id}`);
-  }
-
-  login(email: string, senha: string){
-    return this.httpClient.post<User>(this.apiUrl + "/login", { email, senha }).pipe(
-      tap((usuario) => {
-        localStorage.setItem('usuarioId', usuario.id.toString());
-        sessionStorage.setItem("auth-token", usuario.token)
-        sessionStorage.setItem("username", usuario.name)
+  login(email: string, password: string): Observable<LoginResponse> {
+    const loginData: LoginRequest = { email, password };
+    
+    return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, loginData).pipe(
+      tap((response) => {
+        sessionStorage.setItem("auth-token", response.token);
+        sessionStorage.setItem("username", response.name);
+        sessionStorage.setItem("user-email", response.email);
+        sessionStorage.setItem("user-type", response.userType);
         this.authService.login();
-
-        const decodedToken: any = jwtDecode(usuario.token);
-        if (decodedToken && decodedToken.role) {
-          sessionStorage.setItem("user-role", decodedToken.role);
-        }
       })
-    )
+    );
   }
 
-  register(userData: any) {
+  register(userData: RegisterRequest): Observable<LoginResponse> {
     return this.httpClient.post<LoginResponse>(`${this.apiUrl}/register`, userData).pipe(
-      tap((value) => {
-        sessionStorage.setItem("auth-token", value.token)
-        sessionStorage.setItem("username", value.name)
-        this.authService.login(); // 4. Notifique o AuthService sobre o registro
+      tap((response) => {
+        sessionStorage.setItem("auth-token", response.token);
+        sessionStorage.setItem("username", response.name);
+        sessionStorage.setItem("user-email", response.email);
+        sessionStorage.setItem("user-type", response.userType);
+        this.authService.login();
       })
-    )
+    );
   }
 
-  getUsuarioId(): number | null {
-    const id = localStorage.getItem('usuarioId');
-    return id ? +id : null;
+  logout(): void {
+    sessionStorage.removeItem("auth-token");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("user-email");
+    sessionStorage.removeItem("user-type");
+    this.authService.logout();
   }
 
   getUserRole(): string | null {
-    return sessionStorage.getItem("user-role");
+    return sessionStorage.getItem("user-type");
+  }
+
+  getUserEmail(): string | null {
+    return sessionStorage.getItem("user-email");
+  }
+
+  getUsername(): string | null {
+    return sessionStorage.getItem("username");
+  }
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem("auth-token");
   }
 
   hasRole(role: string): boolean {

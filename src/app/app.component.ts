@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MaterialModules } from './material';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +14,9 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   title = 'conectaPet';
-   isLoggedIn = false;
+  isLoggedIn = false;
 
-  constructor(private authService: AuthService) {
-    this.authService.authStatus.subscribe(status => {
-      this.isLoggedIn = status;
-    });
+  constructor(private loginService: LoginService) {
+    this.isLoggedIn = this.loginService.isLoggedIn();
   }
 }

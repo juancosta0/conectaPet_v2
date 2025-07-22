@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, catchError } from 'rxjs';
 import { Pet } from '../types/pet.type';
+import { environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PetService {
-  private apiUrl = 'http://localhost:8080/api/pets';
+  private apiUrl = `${environment.apiBaseUrl}/api/pets`;
 
   // Mock data para desenvolvimento
   private mockPets: Pet[] = [
@@ -40,19 +41,61 @@ export class PetService {
   constructor(private http: HttpClient) {}
 
   getAllPets(): Observable<Pet[]> {
-    return this.http.get<Pet[]>(this.apiUrl);
+    return this.http.get<Pet[]>(this.apiUrl).pipe(
+      catchError((error) => {
+        console.error('Erro ao buscar pets, usando dados mock:', error);
+        return of(this.mockPets);
+      })
+    );
   }
 
   getPetById(id: number): Observable<Pet> {
-    return this.http.get<Pet>(`${this.apiUrl}/${id}`);
+    return this.http.get<Pet>(`${this.apiUrl}/${id}`).pipe(
+      catchError((error) => {
+        console.error('Erro ao buscar pet, usando dados mock:', error);
+        const mockPet = this.mockPets.find(pet => pet.id === id);
+        return of(mockPet!);
+      })
+    );
   }
 
   getFavoritesPets(favoriteIds: number[]): Observable<Pet[]> {
+    if (favoriteIds.length === 0) {
+      return of([]);
+    }
+    
     const params = favoriteIds.join(',');
-    return this.http.get<Pet[]>(`${this.apiUrl}/favorites?ids=${params}`);
+    return this.http.get<Pet[]>(`${this.apiUrl}/favorites?ids=${params}`).pipe(
+      catchError((error) => {
+        console.error('Erro ao buscar pets favoritos, usando dados mock:', error);
+        const favoritePets = this.mockPets.filter(pet => favoriteIds.includes(pet.id));
+        return of(favoritePets);
+      })
+    );
   }
 
   createPet(petData: Pet): Observable<Pet> {
-    return this.http.post<Pet>(this.apiUrl, petData);
+    return this.http.post<Pet>(this.apiUrl, petData).pipe(
+      catchError((error) => {
+        console.error('Erro ao criar pet:', error);
+        throw error;
+      })
+    );
+  }
+
+  searchPets(filters: any): Observable<Pet[]> {
+    const params = new URLSearchParams();
+    
+    if (filters.species) params.append('species', filters.species);
+    if (filters.size) params.append('size', filters.size);
+    if (filters.minAge) params.append('minAge', filters.minAge.toString());
+    if (filters.maxAge) params.append('maxAge', filters.maxAge.toString());
+    
+    return this.http.get<Pet[]>(`${this.apiUrl}/search?${params.toString()}`).pipe(
+      catchError((error) => {
+        console.error('Erro ao buscar pets com filtros, usando dados mock:', error);
+        return of(this.mockPets);
+      })
+    );
   }
 }

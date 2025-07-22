@@ -1,0 +1,38 @@
+@import "../../../styles/variables.scss";
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #ecfdf5, #ffffff, #eff6ff);
+}
+
+.login-form {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  .logo {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $text-color;
+    }
+  }
+}
